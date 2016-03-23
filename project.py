@@ -39,23 +39,23 @@ def category_delete(category_id):
     return 'Deleting category {}'.format(category_id)
 
 
-@app.route('/catalog/item/<int:item_id>/')
-def item_main(item_id):
+@app.route('/catalog/category/<int:category_id/item/<int:item_id>/')
+def item_main(category_id, item_id):
     return 'Showing description of item {}'.format(item_id)
 
 
-@app.route('/catalog/item/add/')
-def item_add():
+@app.route('/catalog/category/<int:category_id/item/add/')
+def item_add(category_id):
     return 'Add a new item'
 
 
-@app.route('/catalog/item/<int:item_id>/edit/')
-def item_edit(item_id):
+@app.route('/catalog/category/<int:category_id/item/<int:item_id>/edit/')
+def item_edit(category_id, item_id):
     return 'Editing item {}'.format(item_id)
 
 
-@app.route('/catalog/item/<int:item_id>/delete/')
-def item_delete(item_id):
+@app.route('/catalog/category/<int:category_id/item/<int:item_id>/delete/')
+def item_delete(category_id, item_id):
     return 'Deleting item {}'.format(item_id)
 
 
