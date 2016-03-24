@@ -25,7 +25,7 @@
 			<ul>
 				{% for cat in categories %}
 				<li>
-				<a href="{{ url_for('category_main', category_id=cat.id) }}">{{ cat.name }}</a>
+				<a href="{{ url_for('category_main', category_id=cat.id) }}">{{ cat.name }}{% if item.category.id == cat.id %}*{% endif %}</a>
 				</li>
 				{% else %}
 				<li>
