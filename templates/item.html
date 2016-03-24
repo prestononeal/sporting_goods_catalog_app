@@ -2,7 +2,7 @@
 <html>
 
 <head>
-	<title>Sports Item Catalog</title>
+	<title>Sports item catalog</title>
 
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
@@ -13,7 +13,10 @@
 <body>
 
 	<div id="header">
-		<h1>Sports Item Catalog: {{ item.name }}</h1>
+		<h1>Sports catalog, item: {{ item.name }}</h1>
+		<p><a href="{{ url_for('login') }}">login to edit</a></p>
+		<p><a href="{{ url_for('logout') }}">logout</a></p>
+		<div class="clear"></div>
 	</div>
 
 	<div id="content">
