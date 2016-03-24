@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Sports Item Catalog</title>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+
+	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Ubuntu+Mono" />
+</head>
+
+<body>
+
+	<div id="header">
+		<h1>Sports Item Catalog</h1>
+	</div>
+
+	<div id="content">
+		<div id="sidebar">
+			<h2>Categories</h2>
+			<ul>
+				{% for cat in categories %}
+				<li>
+				<a href="{{ url_for('category_main', category_id=cat.id) }}">{{ cat.name }}</a>
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+
+		<div id="main-content">
+			<h2>Latest items <a href="{{ url_for('item_add') }}">(Add one.)</a></h2>
+			<ul>
+				{% for item in items %}
+				<li>
+				<a href="{{ url_for('item_main', item_id=item.id) }}">{{ item.item }}</a>
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+
+		<div class="clear"></div>
+	</div>
+
+</body>
+
+</html>

@@ -1,0 +1,57 @@
+* {
+    font-family: 'Ubuntu Mono';
+    margin: 0;
+    padding: 0;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a:active {
+    text-decoration: underline;
+}
+
+body {
+    background: #FFFADA;
+}
+
+h1 { font-size: 4.0em; }
+p, li { font-size: 1.8em; }
+
+.clear { clear: both; }
+
+#header {
+    background: #e3da9d;
+    padding: 15px 0 15px 15px;
+}
+
+#content {
+    padding: 15px 30px 0 0;
+}
+
+#main-content {
+    list-style: inside;
+    margin-left: 300px;
+    max-width: 600px;
+    //background: #ffffff;
+}
+
+#sidebar {
+    width: 300px;
+    float: left;
+    padding: 0 0 0 15px;
+}
+
+#sidebar ul {
+    list-style: inside;
+}
+
