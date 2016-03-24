@@ -12,5 +12,5 @@ To run this project:
 1. Navigate to the root folder containing [project.py](project.py)
 2. Run `python database_setup.py` to set up the database
 3. Run `python lots_of_items.py` to populate the database with some initial data
-4. Run `python project.py` to run the web app. Naviate to [http://localhost:8000](http://localhost:8000)
-5.  in your browser.
+4. Run `python project.py` to run the web app. Naviate to [http://localhost:8000](http://localhost:8000) in your browser.
+5. Create new items. A user can edit and delete their own items.

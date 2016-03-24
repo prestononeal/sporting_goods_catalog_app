@@ -12,15 +12,15 @@ categories = [{'name': 'Soccer', 'id': 1},
 
 
 items = [{'id': 1, 'category': {'name': 'Soccer', 'id': 1},
-          'item': 'Ball'},
+          'name': 'Ball', 'description': 'Kick it.'},
          {'id': 2, 'category': {'name': 'Baseball', 'id': 2},
-          'item': 'Bat'},
+          'name': 'Bat', 'description': 'Hit stuff with it.'},
          {'id': 3, 'category': {'name': 'Volleyball', 'id': 3},
-          'item': 'Net'},
+          'name': 'Net', 'description': 'Get a ball over it.'},
          {'id': 4, 'category': {'name': 'Baseball', 'id': 2},
-          'item': 'Mitt'},
+          'name': 'Mitt', 'description': 'Catch stuff with it.'},
          {'id': 5, 'category': {'name': 'Volleyball', 'id': 3},
-          'item': 'Shoes'}]
+          'name': 'Shoes', 'description': 'Run with them.'}]
 
 
 @app.route('/login/')
@@ -44,12 +44,27 @@ def catalog_main():
 
 @app.route('/catalog/category/<int:category_id>/')
 def category_main(category_id):
-    return 'Show all the items in a specific category: {}'.format(category_id)
+    # Get the current category so information can be generated for it
+    # in the rendered page
+    for cat in categories:  # TODO: change this to db lookup
+        if cat.get('id') == category_id:
+            category = cat
+    category_items = []
+    for item in items:
+        if item.get('category').get('id') == category_id:
+            category_items.append(item)
+    return render_template('category.html', category=category,
+                           categories=categories, items=category_items)
 
 
 @app.route('/catalog/item/<int:item_id>/')
 def item_main(item_id):
-    return 'Showing description of item {}'.format(item_id)
+    # Show the item info place
+    for item in items:
+        if item.get('id') == item_id:
+            current_item = item
+    return render_template('item.html', categories=categories,
+                           item=current_item)
 
 
 @app.route('/catalog/item/add/')

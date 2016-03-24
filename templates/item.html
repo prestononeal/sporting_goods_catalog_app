@@ -13,7 +13,7 @@
 <body>
 
 	<div id="header">
-		<h1>Sports Item Catalog</h1>
+		<h1>Sports Item Catalog: {{ item.name }}</h1>
 	</div>
 
 	<div id="content">
@@ -33,18 +33,13 @@
 		</div>
 
 		<div id="main-content">
-			<h2>Latest items <a href="{{ url_for('item_add') }}">(Add one.)</a></h2>
-			<ul>
-				{% for item in items %}
-				<li>
-				<a href="{{ url_for('item_main', item_id=item.id) }}">{{ item.item }}</a>
-				</li>
-				{% else %}
-				<li>
-				No entries yet.
-				</li>
-				{% endfor %}
-			</ul>
+			<h2>
+			{{ item.name }} <a href="{{ url_for('item_edit', item_id=item.id) }}">(Edit it.)</a>  <a href="{{ url_for('item_delete', item_id=item.id) }}">(Delete it.)</a>
+			</h2>
+			</br>
+			<div id="description">
+				{{ item.description }}
+			</div>
 		</div>
 
 		<div class="clear"></div>

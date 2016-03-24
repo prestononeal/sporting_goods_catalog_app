@@ -13,7 +13,7 @@
 <body>
 
 	<div id="header">
-		<h1>Sports Item Catalog</h1>
+		<h1>Sports Item Catalog: {{ category.name }}</h1>
 	</div>
 
 	<div id="content">
@@ -22,7 +22,7 @@
 			<ul>
 				{% for cat in categories %}
 				<li>
-				<a href="{{ url_for('category_main', category_id=cat.id) }}">{{ cat.name }}</a>
+				<a href="{{ url_for('category_main', category_id=cat.id) }}">{{ cat.name }}{% if category.id == cat.id %}*{% endif %}</a>
 				</li>
 				{% else %}
 				<li>
@@ -33,11 +33,11 @@
 		</div>
 
 		<div id="main-content">
-			<h2>Latest items <a href="{{ url_for('item_add') }}">(Add one.)</a></h2>
+			<h2>Items in {{ category.name }} <a href="{{ url_for('item_add') }}">(Add one.)</a></h2>
 			<ul>
 				{% for item in items %}
 				<li>
-				<a href="{{ url_for('item_main', item_id=item.id) }}">{{ item.item }}</a>
+				<a href="{{ url_for('item_main', item_id=item.id) }}">{{ item.name }}</a>
 				</li>
 				{% else %}
 				<li>
