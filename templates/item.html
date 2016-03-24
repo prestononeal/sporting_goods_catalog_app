@@ -37,12 +37,15 @@
 
 		<div id="main-content">
 			<h2>
-			{{ item.name }} <a href="{{ url_for('item_edit', item_id=item.id) }}">(Edit it.)</a>  <a href="{{ url_for('item_delete', item_id=item.id) }}">(Delete it.)</a>
+			{{ item.name }} description <a href="{{ url_for('item_edit', item_id=item.id) }}">(Edit it.)</a>  <a href="{{ url_for('item_delete', item_id=item.id) }}">(Delete it.)</a>
 			</h2>
-			</br>
-			<div id="description">
-				{{ item.description }}
-			</div>
+			<ul>
+				<li>
+				<div id="description">
+					{{ item.description }}
+				</div>
+				</li>
+			</ul>
 		</div>
 
 		<div class="clear"></div>
