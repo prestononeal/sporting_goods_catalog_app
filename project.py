@@ -1,4 +1,6 @@
-# The main program for the Item Catalog Web App
+'''
+The main program for the Item Catalog Web App
+'''
 from flask import Flask, render_template, url_for
 app = Flask(__name__)
 
@@ -43,21 +45,6 @@ def catalog_main():
 @app.route('/catalog/category/<int:category_id>/')
 def category_main(category_id):
     return 'Show all the items in a specific category: {}'.format(category_id)
-
-
-@app.route('/catalog/category/add/')
-def category_add():
-    return 'Add a new category'
-
-
-@app.route('/catalog/category/<int:category_id>/edit/')
-def category_edit(category_id):
-    return 'Editing category {}'.format(category_id)
-
-
-@app.route('/catalog/category/<int:category_id>/delete/')
-def category_delete(category_id):
-    return 'Deleting category {}'.format(category_id)
 
 
 @app.route('/catalog/item/<int:item_id>/')
