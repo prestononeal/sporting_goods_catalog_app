@@ -3,7 +3,7 @@ The main program for the Item Catalog Web App
 '''
 from database_setup import User, Category, Item, Base
 from flask import Flask, render_template, url_for, request, flash, \
-    make_response, redirect
+    make_response, redirect, jsonify
 from flask import session as login_session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -219,6 +219,18 @@ def category_main(category_id):
                            category=category,
                            categories=categories,
                            items=category_items)
+
+
+@app.route('/catalog/categories/JSON/')
+def categories_json():
+    categories = session.query(Category).all()
+    return jsonify(Categories=[cat.serialize for cat in categories])
+
+
+@app.route('/catalog/items/JSON/')
+def items_json():
+    items = session.query(Item).all()
+    return jsonify(Items=[item.serialize for item in items])
 
 
 @app.route('/catalog/item/<int:item_id>/')
