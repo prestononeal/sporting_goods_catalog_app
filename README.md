@@ -1,4 +1,4 @@
-# udacity_fullstack_p2_item_catalog
+# sporting_goods_catalog_app
 
 A web application that provides a list of items within a variety of categories.
 A user registration and authentication system is provided so that users can post, edit, and delete their own items and categories.
