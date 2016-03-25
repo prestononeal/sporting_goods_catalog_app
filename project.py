@@ -2,7 +2,7 @@
 The main program for the Item Catalog Web App
 '''
 from flask import Flask, render_template, url_for, request, flash, \
-    make_response
+    make_response, redirect
 from flask import session as login_session
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
@@ -25,15 +25,15 @@ categories = [{'name': 'Soccer', 'id': 1},
 
 
 items = [{'id': 1, 'category': {'name': 'Soccer', 'id': 1},
-          'name': 'Ball', 'description': 'Kick it.'},
+          'name': 'Ball', 'description': 'Kick it.', 'user_id': 1},
          {'id': 2, 'category': {'name': 'Baseball', 'id': 2},
-          'name': 'Bat', 'description': 'Hit stuff with it.'},
+          'name': 'Bat', 'description': 'Hit stuff with it.', 'user_id': 2},
          {'id': 3, 'category': {'name': 'Volleyball', 'id': 3},
-          'name': 'Net', 'description': 'Get a ball over it.'},
+          'name': 'Net', 'description': 'Get a ball over it.', 'user_id': 1},
          {'id': 4, 'category': {'name': 'Baseball', 'id': 2},
-          'name': 'Mitt', 'description': 'Catch stuff with it.'},
+          'name': 'Mitt', 'description': 'Catch stuff with it.', 'user_id': 2},
          {'id': 5, 'category': {'name': 'Volleyball', 'id': 3},
-          'name': 'Shoes', 'description': 'Run with them.'}]
+          'name': 'Shoes', 'description': 'Run with them.', 'user_id': 1}]
 
 
 @app.route('/login/')
@@ -42,7 +42,9 @@ def login():
                                   string.digits)
                     for x in xrange(32))
     login_session['state'] = state
-    return render_template('login.html', state=state)
+    return render_template('login.html',
+                           login_session=login_session,
+                           state=state)
 
 
 @app.route('/gconnect/', methods=['POST'])
@@ -145,9 +147,58 @@ def gconnect():
     return output
 
 
+@app.route('/gdisconnect/')
+def gdisconnect():
+    # Only disconnect a connected user
+    credentials = login_session.get('credentials')
+    if not credentials:
+        response = make_response(json.dumps(
+            'Current user not connected',
+            401))
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    else:
+        # Get the credentials object from the JSON string
+        credentials = OAuth2Credentials.from_json(credentials)
+
+    # Tell Google to revoke the access token
+    access_token = credentials.access_token
+    url = 'https://accounts.google.com/o/oauth2/revoke?token={}'.format(
+        access_token)
+    h = httplib2.Http()
+    result = h.request(url, 'GET')[0]
+
+    # If successful, delete the users session info
+    if result['status'] == '200':
+        response = make_response(json.dumps('Successfully disconnected.'),
+                                 200)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    else:
+        # The given token was invalid
+        response = make_response(json.dumps('Failed to revoke for given user'),
+                                 400)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+
+
+# Disconnect based on provider
 @app.route('/logout/')
 def logout():
-    return 'The logout screen for the app'
+    if 'provider' in login_session:
+        gdisconnect()
+        del login_session['gplus_id']
+        del login_session['credentials']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+        del login_session['user_id']
+        del login_session['provider']
+        flash('You have successfully been logged out.')
+        return redirect(url_for('catalog_main'))
+    else:
+        flash('You were not logged in')
+        return redirect(url_for('catalog_main'))
 
 
 @app.route('/')
@@ -155,7 +206,9 @@ def logout():
 def catalog_main():
     # Get the three latest items
     newest_items = items[-3:]
-    return render_template('catalog.html', categories=categories,
+    return render_template('catalog.html',
+                           login_session=login_session,
+                           categories=categories,
                            items=newest_items)
 
 
@@ -170,7 +223,9 @@ def category_main(category_id):
     for item in items:
         if item.get('category').get('id') == category_id:
             category_items.append(item)
-    return render_template('category.html', category=category,
+    return render_template('category.html',
+                           login_session=login_session,
+                           category=category,
                            categories=categories, items=category_items)
 
 
@@ -180,22 +235,38 @@ def item_main(item_id):
     for item in items:
         if item.get('id') == item_id:
             current_item = item
-    return render_template('item.html', categories=categories,
+    return render_template('item.html',
+                           login_session=login_session,
+                           categories=categories,
                            item=current_item)
 
 
 @app.route('/catalog/item/add/')
 def item_add():
+    if 'username' not in login_session:
+        return redirect(url_for('login'))
     return 'Add a new item'
 
 
 @app.route('/catalog/item/<int:item_id>/edit/')
 def item_edit(item_id):
+    if 'username' not in login_session:
+        return redirect(url_for('login'))
+    # TODO: Get the item from the db
+    if login_session.get('user_id') != items[item_id].get('user_id'):
+        flash('Unauthorized to edit item: {}'.format(item_id))
+        return redirect(url_for('catalog_main'))
     return 'Editing item {}'.format(item_id)
 
 
 @app.route('/catalog/item/<int:item_id>/delete/')
 def item_delete(item_id):
+    if 'username' not in login_session:
+        return redirect(url_for('login'))
+    # TODO: Get the item from the db
+    if login_session.get('user_id') != items[item_id].get('user_id'):
+        flash('Unauthorized to edit item: {}'.format(item_id))
+        return redirect(url_for('catalog_main'))
     return 'Deleting item {}'.format(item_id)
 
 
@@ -209,13 +280,8 @@ def get_user_id(email):
 
 def create_user(login_session):
     # Creates a new user in the database and returns its ID
-    new_user = User(name=login_session['username'],
-                    email=login_session['email'],
-                    picture=login_session['picture'])
-    session.add(new_user)
-    session.commit()
-    user = session.query(User).filter_by(email=login_session['email']).one()
-    return user.id
+    # TODO: DB check
+    return 1
 
 
 if __name__ == '__main__':

@@ -19,6 +19,10 @@
 
 	<div id="header">
 		<h1>Sporting goods catalog</h1>
+
+		{% if login_session.username %}
+		<p><a href="{{ url_for('login') }}">logged in as: {{ login_session.username }}</a></p>
+		{% endif %}
 	</div>
 
 	<div id="content">
@@ -61,7 +65,7 @@
 							$('#result').html('Login Successful!</br>' + result +
 								              '</br>Redirecting...')
 							setTimeout(function() {
-								window.location.href = "/";
+								window.location.href = "{{ url_for('catalog_main') }}";
 							}, 4000);
 						} else if (authResult['error']) {
 							console.log('There was an error: ' + authResult['error']);
@@ -75,7 +79,7 @@
 		</script>
 		<!--End Google sign-in-->
 
-		<!--Facebook sign in-->
+		<!--TODO: Facebook sign in-->
 		<!--End Facebook sign-in-->
 
 	</div>
