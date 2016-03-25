@@ -16,10 +16,10 @@
 		<h1>Sporting goods, category: {{ category.name }}</h1>
 
 		{% if login_session.username %}
-		<p><a href="{{ url_for('login') }}">logged in as: {{ login_session.username }}</a></p>
-		<p><a href="{{ url_for('logout') }}">logout</a></p>
+			<p><a href="{{ url_for('login') }}">logged in as: {{ login_session.username }}</a></p>
+			<p><a href="{{ url_for('logout') }}">logout</a></p>
 		{% else %}
-		<p><a href="{{ url_for('login') }}">login to edit</a></p>
+			<p><a href="{{ url_for('login') }}">login to edit</a></p>
 		{% endif %}
 
 		<div class="clear"></div>
@@ -30,13 +30,13 @@
 			<h2>Categories</h2>
 			<ul>
 				{% for cat in categories %}
-				<li>
-				<a href="{{ url_for('category_main', category_id=cat.id) }}">{{ cat.name }}{% if category.id == cat.id %}*{% endif %}</a>
-				</li>
+					<li>
+					<a href="{{ url_for('category_main', category_id=cat.id) }}">{{ cat.name }}{% if category.id == cat.id %}*{% endif %}</a>
+					</li>
 				{% else %}
-				<li>
-				No entries yet.
-				</li>
+					<li>
+					No entries yet.
+					</li>
 				{% endfor %}
 			</ul>
 		</div>
@@ -50,17 +50,17 @@
 			</h2>
 			<ul>
 				{% for item in items %}
-				<li>
-				<a href="{{ url_for('item_main', item_id=item.id) }}">{{ item.name }}</a>
+					<li>
+					<a href="{{ url_for('item_main', item_id=item.id) }}">{{ item.name }}</a>
 				{% if item.user_id == login_session.user_id %}
-				<a href="{{ url_for('item_edit', item_id=item.id) }}">(Edit it.)</a>
-				<a href="{{ url_for('item_delete', item_id=item.id) }}">(Delete it.)</a>
+					<a href="{{ url_for('item_edit', item_id=item.id) }}">(Edit it.)</a>
+					<a href="{{ url_for('item_delete', item_id=item.id) }}">(Delete it.)</a>
 				{% endif %}
-				</li>
+					</li>
 				{% else %}
-				<li>
-				No entries yet.
-				</li>
+					<li>
+					No entries yet.
+					</li>
 				{% endfor %}
 			</ul>
 		</div>

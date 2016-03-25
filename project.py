@@ -143,7 +143,6 @@ def gconnect():
     output += 'border-radius: 150px;'
     output += '-webkit-border-radius: 150px;'
     output += '-moz-border-radius: 150px;">'
-    flash('You are now logged in as {}'.format(login_session['username']))
     return output
 
 
@@ -241,33 +240,49 @@ def item_main(item_id):
                            item=current_item)
 
 
-@app.route('/catalog/item/add/')
+@app.route('/catalog/item/add/', methods=['GET', 'POST'])
 def item_add():
-    if 'username' not in login_session:
+    if 'user_id' not in login_session:
         return redirect(url_for('login'))
-    return 'Add a new item'
+    if request.method == 'POST':
+        flash('Item added.')
+        return redirect(url_for('catalog_main'))
+    else:
+        return render_template('itemAdd.html', login_session=login_session)
 
 
-@app.route('/catalog/item/<int:item_id>/edit/')
+@app.route('/catalog/item/<int:item_id>/edit/', methods=['GET', 'POST'])
 def item_edit(item_id):
-    if 'username' not in login_session:
+    if 'user_id' not in login_session:
         return redirect(url_for('login'))
     # TODO: Get the item from the db
-    if login_session.get('user_id') != items[item_id].get('user_id'):
-        flash('Unauthorized to edit item: {}'.format(item_id))
+    item = items[item_id-1]
+    if login_session.get('user_id') != item.get('user_id'):
+        flash('Unauthorized to edit item {}.'.format(item_id))
         return redirect(url_for('catalog_main'))
-    return 'Editing item {}'.format(item_id)
+    if request.method == 'POST':
+        flash('Item {} edited.'.format(item_id))
+        return redirect(url_for('catalog_main'))
+    else:
+        return render_template('itemEdit.html', login_session=login_session,
+                               item=item)
 
 
-@app.route('/catalog/item/<int:item_id>/delete/')
+@app.route('/catalog/item/<int:item_id>/delete/', methods=['GET', 'POST'])
 def item_delete(item_id):
-    if 'username' not in login_session:
+    if 'user_id' not in login_session:
         return redirect(url_for('login'))
     # TODO: Get the item from the db
-    if login_session.get('user_id') != items[item_id].get('user_id'):
-        flash('Unauthorized to edit item: {}'.format(item_id))
+    item = items[item_id-1]
+    if login_session.get('user_id') != item.get('user_id'):
+        flash('Unauthorized to delete item {}.'.format(item_id))
         return redirect(url_for('catalog_main'))
-    return 'Deleting item {}'.format(item_id)
+    if request.method == 'POST':
+        flash('Item {} deleted.'.format(item_id))
+        return redirect(url_for('catalog_main'))
+    else:
+        return render_template('itemDelete.html', login_session=login_session,
+                               item=item)
 
 
 def get_user_id(email):

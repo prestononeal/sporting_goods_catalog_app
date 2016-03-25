@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Sporting goods catalog</title>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Ubuntu+Mono" />
+</head>
+
+<body>
+
+	<div id="header">
+		<h1>Sporting goods, edit item {{ item.id }}</h1>
+
+		{% if login_session.username %}
+			<p><a href="{{ url_for('login') }}">logged in as: {{ login_session.username }}</a></p>
+			<p><a href="{{ url_for('logout') }}">logout</a></p>
+			{% else %}
+			<p><a href="{{ url_for('login') }}">login to edit</a></p>
+		{% endif %}
+
+		<div class="clear"></div>
+	</div>
+
+	<div id="content">
+		<form action="{{ url_for('item_edit', item_id=item.id) }}" method = 'POST'>
+		<p>Name:</p>
+		<input type='text' size='100' name='name' value="{{ item.name }}">
+		<p>Description:</p>
+		<input type='text' size='100' rows=4 name='description' value="{{ item.description }}">
+		<input type='submit' value='Edit'>
+		</form>
+	</div>
+
+</body>
+
+</html>
