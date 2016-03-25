@@ -1,9 +1,12 @@
 '''
 The main program for the Item Catalog Web App
 '''
+from database_setup import User, Category, Item, Base
 from flask import Flask, render_template, url_for, request, flash, \
     make_response, redirect
 from flask import session as login_session
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 from oauth2client.client import OAuth2Credentials
@@ -12,28 +15,19 @@ import random
 import string
 import json
 import requests
+
+
+# Create the database engine instance and bind it to a session
+engine = create_engine('sqlite:///sportinggoodscatalog.db')
+Base.metadata.bind = engine
+DBSession = sessionmaker(bind=engine)
+session = DBSession()
+
+
 app = Flask(__name__)
 
 G_CLIENT_ID = json.loads(open('g_client_secrets.json', 'r').read(
     ))['web']['client_id']
-
-
-# Temporary database items. TODO: remove
-categories = [{'name': 'Soccer', 'id': 1},
-              {'name': 'Baseball', 'id': 2},
-              {'name': 'Volleyball', 'id': 3}]
-
-
-items = [{'id': 1, 'category': {'name': 'Soccer', 'id': 1},
-          'name': 'Ball', 'description': 'Kick it.', 'user_id': 1},
-         {'id': 2, 'category': {'name': 'Baseball', 'id': 2},
-          'name': 'Bat', 'description': 'Hit stuff with it.', 'user_id': 2},
-         {'id': 3, 'category': {'name': 'Volleyball', 'id': 3},
-          'name': 'Net', 'description': 'Get a ball over it.', 'user_id': 1},
-         {'id': 4, 'category': {'name': 'Baseball', 'id': 2},
-          'name': 'Mitt', 'description': 'Catch stuff with it.', 'user_id': 2},
-         {'id': 5, 'category': {'name': 'Volleyball', 'id': 3},
-          'name': 'Shoes', 'description': 'Run with them.', 'user_id': 1}]
 
 
 @app.route('/login/')
@@ -203,8 +197,9 @@ def logout():
 @app.route('/')
 @app.route('/catalog/')
 def catalog_main():
-    # Get the three latest items
-    newest_items = items[-3:]
+    # Get the three latest items to display and all of the categories
+    newest_items = session.query(Item).order_by(Item.id.desc()).limit(3)
+    categories = session.query(Category).all()
     return render_template('catalog.html',
                            login_session=login_session,
                            categories=categories,
@@ -213,27 +208,24 @@ def catalog_main():
 
 @app.route('/catalog/category/<int:category_id>/')
 def category_main(category_id):
-    # Get the current category so information can be generated for it
-    # in the rendered page
-    for cat in categories:  # TODO: change this to db lookup
-        if cat.get('id') == category_id:
-            category = cat
-    category_items = []
-    for item in items:
-        if item.get('category').get('id') == category_id:
-            category_items.append(item)
+    # Get all of the categories so they can be shown.
+    # Also get the current category so it can be marked in the
+    # rendered page
+    categories = session.query(Category).all()
+    category = session.query(Category).filter_by(id=category_id).one()
+    category_items = session.query(Item).filter_by(category_id=category_id)
     return render_template('category.html',
                            login_session=login_session,
                            category=category,
-                           categories=categories, items=category_items)
+                           categories=categories,
+                           items=category_items)
 
 
 @app.route('/catalog/item/<int:item_id>/')
 def item_main(item_id):
     # Show the item info place
-    for item in items:
-        if item.get('id') == item_id:
-            current_item = item
+    categories = session.query(Category).all()
+    item = session.query(Item).filter_by(id=item_id).one()
     return render_template('item.html',
                            login_session=login_session,
                            categories=categories,
