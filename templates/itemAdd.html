@@ -41,6 +41,12 @@
 		<form action="{{ url_for('item_add') }}" method = 'POST'>
 		<p>Name:</p>
 		<input type='text' size='100' name='name'>
+		<p>Category:</p>
+		<select name="category" multiple="multiple" size=10>
+			{% for cat in categories %}
+		    	<option>{{ cat.name }}</option>
+		    {% endfor %}
+		</select>
 		<p>Description:</p>
 		<input type='text' size='100' name='description'>
 		<input type='submit' value='Create'>
