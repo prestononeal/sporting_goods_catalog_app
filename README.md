@@ -1,7 +1,8 @@
 # sporting_goods_catalog_app
 
-A web application that provides a list of items within a variety of categories.
-A user registration and authentication system is provided through Google OAuth 2.0 authentication so that users can post, edit, and delete their own items.
+A web application that provides a list of sporting goods catalog items within a variety of categories.
+
+A user registration and authentication system is provided through the third party Google OAuth 2.0 API so that users can post, edit, and delete their own items.
 
 The HTML/CSS layout was borrowed heavily from [https://css-tricks.com/super-simple-two-column-layout/](https://css-tricks.com/super-simple-two-column-layout/)
 
