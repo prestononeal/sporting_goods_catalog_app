@@ -1,4 +1,4 @@
-# sporting_goods_catalog_app
+#Udacity, Full Stack Web Developer Project 3: Sporting Goods Catalog Web App
 
 A web application that provides a list of sporting goods catalog items within a variety of categories.
 
