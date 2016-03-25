@@ -15,6 +15,18 @@
 	<div id="header">
 		<h1>Sporting goods, category: {{ category.name }}</h1>
 
+		<div class="flash">
+		{% with messages = get_flashed_messages() %}
+			{% if messages %}
+				<ul>
+				{% for message in messages %}
+					<li><strong>{{message}}</strong></li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+		{% endwith %}
+		</div>
+
 		{% if login_session.username %}
 			<p><a href="{{ url_for('login') }}">logged in as: {{ login_session.username }}</a></p>
 			<p><a href="{{ url_for('logout') }}">logout</a></p>

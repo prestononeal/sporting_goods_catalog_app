@@ -243,6 +243,7 @@ def item_main(item_id):
 @app.route('/catalog/item/add/', methods=['GET', 'POST'])
 def item_add():
     if 'user_id' not in login_session:
+        flash('User must login to complete the given action.')
         return redirect(url_for('login'))
     if request.method == 'POST':
         flash('Item added.')
@@ -254,6 +255,7 @@ def item_add():
 @app.route('/catalog/item/<int:item_id>/edit/', methods=['GET', 'POST'])
 def item_edit(item_id):
     if 'user_id' not in login_session:
+        flash('User must login to complete the given action.')
         return redirect(url_for('login'))
     # TODO: Get the item from the db
     item = items[item_id-1]
@@ -271,6 +273,7 @@ def item_edit(item_id):
 @app.route('/catalog/item/<int:item_id>/delete/', methods=['GET', 'POST'])
 def item_delete(item_id):
     if 'user_id' not in login_session:
+        flash('User must login to complete the given action.')
         return redirect(url_for('login'))
     # TODO: Get the item from the db
     item = items[item_id-1]
