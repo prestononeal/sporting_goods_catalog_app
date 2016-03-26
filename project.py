@@ -241,7 +241,7 @@ def item_main(item_id):
     return render_template('item.html',
                            login_session=login_session,
                            categories=categories,
-                           item=current_item)
+                           item=item)
 
 
 @app.route('/catalog/item/add/', methods=['GET', 'POST'])
@@ -318,15 +318,20 @@ def item_delete(item_id):
 def get_user_id(email):
     # Gets the user ID from the user's email address
     try:
-        return 1  # TODO: DB check
+        user = session.query(User).filter_by(email=email).one()
+        return user.id
     except:
         return None
 
 
 def create_user(login_session):
     # Creates a new user in the database and returns its ID
-    # TODO: DB check
-    return 1
+    new_user = User(name=login_session['username'],
+                    email=login_session['email'],
+                    picture=login_session['picture'])
+    session.add(new_user)
+    session.commit()
+    return new_user.id
 
 
 if __name__ == '__main__':
