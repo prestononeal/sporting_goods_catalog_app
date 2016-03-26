@@ -15,6 +15,7 @@ import random
 import string
 import json
 import requests
+import bleach
 
 
 # Create the database engine instance and bind it to a session
@@ -253,9 +254,9 @@ def item_add():
         # Get the category ID from the name
         category = session.query(Category).filter_by(
             name=request.form['category']).one()
-        new_item = Item(name=request.form['name'],
+        new_item = Item(name=bleach.clean(request.form['name']),
                         category_id=category.id,
-                        description=request.form['description'],
+                        description=bleach.clean(request.form['description']),
                         user_id=login_session['user_id'])
         session.add(new_item)
         session.commit()
@@ -278,14 +279,14 @@ def item_edit(item_id):
         return redirect(url_for('catalog_main'))
     if request.method == 'POST':
         if request.form['name']:
-            item.name = request.form['name']
+            item.name = bleach.clean(request.form['name'])
         if request.form['category']:
             # Get the category ID from the category name
             category = session.query(Category).filter_by(
                 name=request.form['category']).one()
             item.category_id = category.id
         if request.form['description']:
-            item.price = request.form['description']
+            item.price = bleach.clean(request.form['description'])
         session.add(item)
         session.commit()
         flash('Item {} edited.'.format(item_id))
