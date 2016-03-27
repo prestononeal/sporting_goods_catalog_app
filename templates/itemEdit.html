@@ -1,62 +1,51 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-	<title>Sporting goods catalog</title>
-
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-	<link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
-</head>
-
-<body>
-
-	<div id="header">
-		<h1>Sporting goods, edit item {{ item.id }}</h1>
-
-		<div class="flash">
-		{% with messages = get_flashed_messages() %}
-			{% if messages %}
-				<ul>
-				{% for message in messages %}
-					<li><strong>{{message}}</strong></li>
-					{% endfor %}
-				</ul>
-			{% endif %}
-		{% endwith %}
+	<head>
+		<title>Sporting goods catalog</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+		<link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
+	</head>
+	<body>
+		<div id="header">
+			<h1>Sporting goods, edit item {{ item.id }}</h1>
+			<div class="flash">
+				{% with messages = get_flashed_messages() %}
+				{% if messages %}
+					<ul>
+						{% for message in messages %}
+							<li><strong>{{message}}</strong></li>
+						{% endfor %}
+					</ul>
+				{% endif %}
+			{% endwith %}
 		</div>
-
 		{% if login_session.username %}
 			<p><a href="{{ url_for('login') }}">logged in as: {{ login_session.username }}</a></p>
 			<p><a href="{{ url_for('logout') }}">logout</a></p>
-			{% else %}
+		{% else %}
 			<p><a href="{{ url_for('login') }}">login to edit</a></p>
 		{% endif %}
-
 		<div class="clear"></div>
 	</div>
-
 	<div id="content">
 		<form action="{{ url_for('item_edit', item_id=item.id) }}" method = 'POST'>
-		<p>Name:</p>
-		<input type='text' size='100' name='name' value="{{ item.name }}">
-		<p>Category:</p>
-		<select name="category" multiple="multiple" size=10>
-			{% for cat in categories %}
-				{% if cat.name == item.category.name %}
-		    		<option selected>{{ cat.name }}</option>
-				{% else %}
-					<option>{{ cat.name }}</option>
-				{% endif %}
-		    {% endfor %}
-		</select>
-		<p>Description:</p>
-		<input type='text' size='100' rows=4 name='description' value="{{ item.description }}">
-		<input type='submit' value='Edit'>
+			<p>Name:</p>
+			<input type='text' size='100' name='name' value="{{ item.name }}">
+			<p>Category:</p>
+			<select name="category" multiple="multiple" size=10>
+				{% for cat in categories %}
+					{% if cat.name == item.category.name %}
+						<option selected>{{ cat.name }}</option>
+					{% else %}
+						<option>{{ cat.name }}</option>
+					{% endif %}
+				{% endfor %}
+			</select>
+			<p>Description:</p>
+			<input type='text' size='100' rows=4 name='description' value="{{ item.description }}">
+			<input type='submit' value='Edit'>
 		</form>
 	</div>
-
 </body>
-
 </html>

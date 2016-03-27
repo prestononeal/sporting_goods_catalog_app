@@ -1,42 +1,33 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-	<title>Sporting goods catalog</title>
-
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-	<link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
-
-	<!--Google sign-in prerequisites-->
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-	<script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
-	<!--End google sign-in prereqs-->
-</head>
-
-<body>
-
-	<div id="header">
-		<h1>Sporting goods catalog, login page</h1>
-
-		<div class="flash">
-		{% with messages = get_flashed_messages() %}
-			{% if messages %}
-				<ul>
-				{% for message in messages %}
-					<li><strong>{{message}}</strong></li>
-					{% endfor %}
-				</ul>
-			{% endif %}
-		{% endwith %}
+	<head>
+		<title>Sporting goods catalog</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+		<link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
+		<!--Google sign-in prerequisites-->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+		<script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
+		<!--End google sign-in prereqs-->
+	</head>
+	<body>
+		<div id="header">
+			<h1>Sporting goods catalog, login page</h1>
+			<div class="flash">
+				{% with messages = get_flashed_messages() %}
+				{% if messages %}
+					<ul>
+						{% for message in messages %}
+							<li><strong>{{message}}</strong></li>
+						{% endfor %}
+					</ul>
+				{% endif %}
+			{% endwith %}
 		</div>
-
 		{% if login_session.username %}
-		<p><a href="{{ url_for('login') }}">logged in as: {{ login_session.username }}</a></p>
+			<p><a href="{{ url_for('login') }}">logged in as: {{ login_session.username }}</a></p>
 		{% endif %}
 	</div>
-
 	<div id="content">
 		<!--Google sign in-->
 		<div id="signinButton">
@@ -51,7 +42,6 @@
 			</span>
 		</div>
 		<div id="result"></div>
-
 		<script>
 		function signInCallback(authResult) {
 			if (authResult['code']) {
@@ -84,12 +74,8 @@
 		}
 		</script>
 		<!--End Google sign-in-->
-
 		<!--TODO: Facebook sign in-->
 		<!--End Facebook sign-in-->
-
 	</div>
-
 </body>
-
 </html>
