@@ -19,13 +19,14 @@ import bleach
 
 
 # Create the database engine instance and bind it to a session
-engine = create_engine('sqlite:///sportinggoodscatalog.db')
+engine = create_engine('postgresql:///catalog')
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
 app = Flask(__name__)
+app.secret_key = 'super_secret_key'
 
 G_CLIENT_ID = json.loads(open('g_client_secrets.json', 'r').read(
     ))['web']['client_id']
@@ -336,6 +337,5 @@ def create_user(login_session):
 
 
 if __name__ == '__main__':
-    app.debug = True
-    app.secret_key = 'super_secret_key'
-    app.run(host='0.0.0.0', port=8000)
+    app.debug = True 
+    app.run()
